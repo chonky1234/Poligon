@@ -8,7 +8,7 @@ namespace Poligon
 {
     public class Vektor
     {
-        Tacka pocetak, kraj;
+        public Tacka pocetak, kraj;
         public Vektor() { }
         public Vektor(Tacka pocetak, Tacka kraj)
         {
@@ -46,15 +46,18 @@ namespace Poligon
             Vektor AD = new Vektor(A, D);
             double k1 = VP(AB, AC);
             double k2 = VP(AB, AD);
-            if (k1 * k2 < 0) return 2;
+            if (k1 * k2 < 0) return 1;
             if (k1 * k2 > 0) return 0;
-            return 1;
+            return -1;
         }
-        static public bool presek(Vektor a, Vektor b)
+        public bool presek(Vektor b)
         {
-            if (SIS(a, b.pocetak, b.kraj) * SIS(b, a.pocetak, a.kraj) > 0) return true;
+            if (ugao(this, b) == 0) return false;
+
+            if (SIS(this, b.pocetak, b.kraj) == 1 && SIS(b, this.pocetak, this.kraj) == 1) return true;
             return false;
         }
+
         static public double ugao(Vektor a, Vektor b)
         {
             Tacka A = a.centriraj();
