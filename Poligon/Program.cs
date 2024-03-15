@@ -184,7 +184,7 @@ namespace Poligon
             if ((Pravi == 2) && (Susedni == 1)) Console.WriteLine("Da");
             else Console.WriteLine("Ne");
             */
-            Tacka A = new Tacka(4, 4);
+            /*Tacka A = new Tacka(4, 4);
             Tacka B = new Tacka(-2, 2);
             Tacka C = new Tacka(6, -2);
             Vektor AB = new Vektor(A, B);
@@ -198,7 +198,10 @@ namespace Poligon
             Console.WriteLine(ugaoBCA);
 
             double ugaoCAB = 180 - Vektor.ugao(CA, AB);
-            Console.WriteLine(ugaoCAB);
+            Console.WriteLine(ugaoCAB);*/
+
+            Console.WriteLine("test");
+            Console.ReadKey();
         }
     }
 }
