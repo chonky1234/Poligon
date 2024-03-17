@@ -59,7 +59,7 @@ namespace Poligon
         }
 
         static public double ugao(Vektor a, Vektor b)
-        {
+        {       
             Tacka A = a.centriraj();
             Tacka B = b.centriraj();
             double ugao = B.ugao() - A.ugao();

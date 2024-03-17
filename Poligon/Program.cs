@@ -11,114 +11,6 @@ namespace Poligon
     internal class Program
     {
 
-        /*public static void ucitaj()
-        {
-            Console.WriteLine("Koje je ime fajla");
-            string imefajla = Console.ReadLine();
-            StreamReader zika = new StreamReader(imefajla);
-
-            n = Convert.ToInt32(zika.ReadLine());
-            lista = new List<grana>[n];
-
-            cvor = new string[n];
-
-            for (int i = 0; i < n; i++)
-            {
-                cvor[i] = zika.ReadLine();
-                lista[i] = new List<grana>();
-
-            }
-
-            for (int i = 0; i < n; i++)
-            {
-                string ppoc = cvor[i];
-                string pkr = "";
-                double tezina = 0;
-
-                while (pkr != "-")
-                {
-
-                    pkr = zika.ReadLine();
-                    if (pkr == "-") break;
-
-                    tezina = Convert.ToDouble(zika.ReadLine());
-
-                    grana p = new grana(ppoc, pkr, tezina);
-
-                    lista[i].Add(p);
-
-                }
-            }
-        }
-
-
-        public static void sacuvaj()
-        {
-            Console.WriteLine("Koje je ime fajla");
-            string imefajla = Console.ReadLine();
-            StreamWriter pera = new StreamWriter(imefajla);
-
-            pera.WriteLine(n);
-
-            for (int i = 0; i < n; i++)
-            {
-                pera.WriteLine(cvor[i]);
-            }
-
-            for (int i = 0; i < n; i++)
-            {
-
-                foreach (grana g in lista[i])
-                {
-                    pera.WriteLine(g.toStringZaCuvanje());
-                }
-                pera.WriteLine("-");
-            }
-            pera.Close();
-        }
-
-        public static void unos()
-        {
-            Console.WriteLine("Koliko ima cvorova?");
-            n = Convert.ToInt32(Console.ReadLine());
-            lista = new List<grana>[n];
-
-            cvor = new string[n];
-
-            for (int i = 0; i < n; i++)
-            {
-                cvor[i] = Console.ReadLine();
-                lista[i] = new List<grana>();
-
-            }
-
-
-
-            for (int i = 0; i < n; i++)
-            {
-                Console.WriteLine($"Unesi sa kojim cvorovima je povezan ovaj cvor {cvor[i]}");
-
-
-                string ppoc = cvor[i];
-                string pkr = "";
-                double tezina = 0;
-
-                while (true)
-                {
-
-                    pkr = Console.ReadLine();
-                    if (pkr == "-") break;
-
-                    tezina = Convert.ToDouble(Console.ReadLine());
-
-                    grana p = new grana(ppoc, pkr, tezina);
-
-                    lista[i].Add(p);
-
-                }
-            }
-        }*/
-
         static public int n;
         static public List<Tacka> t = new List<Tacka>();
         static public List<Vektor> v = new List<Vektor>();
@@ -251,7 +143,7 @@ namespace Poligon
             Console.WriteLine("povrsina je " + (b1 - b2) / 2);
         }
 
-        static void konveksan()
+        static bool konveksan()
         {
             int p = 0;
             for (int i = 0; i < v.Count - 1; i++)
@@ -279,19 +171,48 @@ namespace Poligon
             if (Math.Abs(p) == t.Count)
             {
                 Console.WriteLine("Konveksan je");
+                return true;
             }
             else
             {
                 Console.WriteLine("Nije konveksan");
+                return false;
             }
-
 
         }
 
-        void tackaUnutra()
+
+        static int tackaLevo()
         {
-            bool veceOd0 = false;
-            bool pravilo = false;
+            double x = t[0].x;
+            double y = t[0].y;
+            int indeks = 0; 
+            for (int i = 0; i < t.Count; i++)
+            {
+                if (t[i].x < x)
+                {
+                    x = t[i].x;
+                    y = t[i].y;
+                    indeks = i;
+                    continue;
+                }
+                if (t[i].x == x)
+                {
+                    if (t[i].y > y)
+                    {
+                        x = t[i].x;
+                        y = t[i].y;
+                        indeks = i;
+                    }
+                }
+            }
+
+            return indeks;
+        }
+
+
+        static void tackaUnutra()
+        {
 
             Tacka Tpomoc = new Tacka();
 
@@ -300,49 +221,99 @@ namespace Poligon
             Console.WriteLine("Unesite koordinatu X");
             Tpomoc.y = Convert.ToInt16(Console.ReadLine());
 
+            Tacka Tpomoc2 = new Tacka();
+            Tpomoc2.x = t[tackaLevo()].x-1;
+            Tpomoc2.x = Tpomoc.y;
 
 
-            Vektor Vpomoc = new Vektor(v[0].pocetak, Tpomoc);
-            if (Vektor.VP(v[0],Vpomoc) > 0)
+
+            Vektor zoran = new Vektor(Tpomoc, Tpomoc2);
+            int p = 0;
+            for (int i = 0; i < v.Count; i++)
             {
-                veceOd0 = true;
-            }
-            else if (Vektor.VP(v[0], Vpomoc) > 0)
-            {
-                veceOd0 = false;
-            }
-
-            if (Vektor.VP(v[0], v[1]) > 0)
-            {
-                pravilo = true;
-            }
-            else if (Vektor.VP(v[0], Vpomoc) > 0)
-            {
-                pravilo = false;
-            }
-
-
-            
-            for (int i = 1; i < v.Count; i++)
-            {
-                Vektor zoran = new Vektor(v[i].pocetak, Tpomoc);
-                Vektor Prezorana = new Vektor(v[i-1].pocetak, Tpomoc);
-
-                if (Vektor.VP(v[i],zoran) > 0 && Vektor.VP(v[i-1], Prezorana) > 0)
+                if (zoran.presek(v[i]))
                 {
-                
+                    p++;
                 }
-
             }
+
+            if (p % 2 == 1)
+            {
+                Console.WriteLine("unutra je");
+            }
+            else
+            {
+                Console.WriteLine("napolju je");
+            }
+            return;
+        }
+
+
+        static double pov(List<Tacka> t)
+        {
+            double b1 = 0;
+            double b2 = 0;
+            for (int i = 0; i < t.Count - 1; i++)
+            {
+                b1 += t[i].x * t[i + 1].y;
+            }
+            b1 += t[t.Count - 1].x * t[0].y;
+
+            for (int i = 0; i < t.Count - 1; i++)
+            {
+                b2 += t[i].y * t[i + 1].x;
+            }
+            b2 += t[t.Count - 1].y * t[0].x;
+
+            return Math.Abs((b1 - b2)/2);
+        }
+
+
+        static void konveksanOmotac()
+        {
+            List<Tacka> tVece = new List<Tacka>();
+            List<Tacka> tManje = new List<Tacka>();
             
 
 
+            
+            for (int i = 0; i < v.Count; i++)
+            {
+                if (Vektor.VP(v[i], v[(i + 1) % v.Count]) > 0)
+                {
+                    tVece.Add(t[(i + 1) % t.Count]);
+                }
+                else if (Vektor.VP(v[i], v[(i + 1) % v.Count]) < 0)
+                {
+                    tManje.Add(t[(i + 1) % t.Count]);
+                }
+            }
+
+            
+
+            if (pov(tVece) > pov(tManje))
+            {
+                for (int i = 0; i < tVece.Count; i++)
+                {
+                    Console.WriteLine("X = " + tVece[i].x + "   Y = " + tVece[i].y);
+                }
+            }
+
+
+            if (pov(tManje) > pov(tVece))
+            {
+                for (int i = 0; i < tManje.Count; i++)
+                {
+                    Console.WriteLine("X = " + tManje[i].x + "   Y = " + tManje[i].y);
+                }
+            }
+
+
+
+
         }
 
-        void konveksanOmotac()
-        {
 
-        }
 
         static void Main(string[] args)
         {
@@ -353,6 +324,10 @@ namespace Poligon
             obim();
             povrsina();
             konveksan();
+            tackaUnutra();
+            konveksanOmotac();
+            
+
 
             Console.WriteLine("test");
             Console.ReadKey();
